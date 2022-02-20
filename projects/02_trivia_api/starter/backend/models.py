@@ -4,7 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 import json
 
 database_name = "trivia"
-database_path = "postgres://{}/{}".format('localhost:5432', database_name)
+database_path = "postgresql://{}@localhost:5432/{}".format('postgres', database_name)
 
 db = SQLAlchemy()
 
@@ -29,7 +29,7 @@ class Question(db.Model):
   id = Column(Integer, primary_key=True)
   question = Column(String)
   answer = Column(String)
-  category = Column(String)
+  category = Column(Integer,db.ForeignKey('categories.id'))
   difficulty = Column(Integer)
 
   def __init__(self, question, answer, category, difficulty):
@@ -67,6 +67,7 @@ class Category(db.Model):
 
   id = Column(Integer, primary_key=True)
   type = Column(String)
+  question_category=db.relationship('Question',backref='category_id')
 
   def __init__(self, type):
     self.type = type
@@ -75,4 +76,8 @@ class Category(db.Model):
     return {
       'id': self.id,
       'type': self.type
+    }
+  def format2(self):
+    return {
+      self.id:self.type
     }
