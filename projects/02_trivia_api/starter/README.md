@@ -89,8 +89,11 @@ npm start
 ## Running tests
 The application includes a file named `test_flaskr.py`.
 This file contains multiple tests for each endpoint.
-To run the tests , make sure first to change the database URI with your corresponing database URI. The using your command line , cd to the project main folder, then run the command:
+To run the tests , make sure first to change the database URI with your corresponing database URI. The using your command line , cd to the project main folder, then run these commands:
 ```bash
+dropdb trivia_test
+createdb trivia_test
+psql trivia_test < trivia.psql
 python test_flaskr.py
 ```
 Feel free to to explore the test file.
