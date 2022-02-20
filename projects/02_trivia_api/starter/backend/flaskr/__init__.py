@@ -3,6 +3,7 @@ from flask import Flask, request, abort, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 import random
+import json
 
 from models import setup_db, Question, Category
 from random import choice
@@ -124,18 +125,21 @@ def create_app(test_config=None):
   def search_question():
     search_term=request.get_json()['searchTerm']
     results=Question.query.filter(Question.question.ilike('%'+search_term+'%')).all()
-
     if len(results)==0:
       abort(404)
     
-    results_list=[i.format() for i in results]
+    try:
+      results=Question.query.filter(Question.question.ilike('%'+search_term+'%')).all()
+      results_list=[i.format() for i in results]
 
-    return jsonify({
-      'success':True,
-      'searched':search_term,
-      'questions':results_list,
-      'total_questions':len(Question.query.all()),
-    })
+      return jsonify({
+        'success':True,
+        'searched':search_term,
+        'questions':results_list,
+        'total_questions':len(Question.query.all()),
+      })
+    except:
+      abort(400)
   
   #Get Questions by category:
   @app.route('/categories/<int:category_id>/questions')
@@ -155,8 +159,8 @@ def create_app(test_config=None):
     
     return jsonify({
       'success':True,
-      'category_questions':category_questions_list,
-      'questions':questions,
+      'category_questions':len(category_questions),
+      'questions':category_questions_list,
       'total_questions':len(Question.query.all()),
       'current_category':Category.query.get(category_id).type
     })
@@ -212,6 +216,14 @@ def create_app(test_config=None):
       'success':False,
       'error':422,
       'message':'unprocessable'
+    }),422
+  
+  @app.errorhandler(400)
+  def unprocessable(error):
+    return jsonify({
+      'success':False,
+      'error':400,
+      'message':'Bad request'
     }),422
 
   return app

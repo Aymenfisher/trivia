@@ -98,5 +98,7 @@ python test_flaskr.py
 ```
 Feel free to to explore the test file.
 
+## API reference :
+The API Reference file is located on the '```\backend\api_reference.md```' directory.
 
 
