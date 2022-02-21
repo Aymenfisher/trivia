@@ -2,9 +2,10 @@ import os
 from sqlalchemy import Column, String, Integer, create_engine
 from flask_sqlalchemy import SQLAlchemy
 import json
+from settings import db_name,db_user
 
-database_name = "trivia"
-database_path = "postgresql://{}@localhost:5432/{}".format('postgres', database_name)
+database_name = db_name
+database_path = "postgresql://{}@localhost:5432/{}".format(db_user, database_name)
 
 db = SQLAlchemy()
 
